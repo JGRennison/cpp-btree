@@ -282,7 +282,7 @@ struct btree_common_params {
 
   typedef Alloc allocator_type;
   typedef Key key_type;
-  typedef ssize_t size_type;
+  typedef size_t size_type;
   typedef ptrdiff_t difference_type;
 
   enum {
