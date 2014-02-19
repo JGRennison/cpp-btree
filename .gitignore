@@ -1,0 +1,11 @@
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+Makefile
+
+*.so
+*.so.*
+
+btree_bench
+btree_test
+safe_btree_test
