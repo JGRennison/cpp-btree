@@ -137,6 +137,8 @@ class btree_container {
     return !operator==(other);
   }
 
+  // Functor retrieval
+  key_compare key_comp() const { return tree_.key_comp(); }
 
  protected:
   Tree tree_;
