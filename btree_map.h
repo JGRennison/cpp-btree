@@ -63,6 +63,18 @@ class btree_map : public btree_map_container<
       : super_type(x) {
   }
 
+  // Move constructor.
+  btree_map(self_type &&x)
+      : super_type() {
+    this->swap(x);
+  }
+
+  // Copy/move assignment
+  self_type& operator=(self_type x) {
+    this->swap(x);
+    return *this;
+  }
+
   // Range constructor.
   template <class InputIterator>
   btree_map(InputIterator b, InputIterator e,
@@ -108,6 +120,18 @@ class btree_multimap : public btree_multi_container<
   // Copy constructor.
   btree_multimap(const self_type &x)
       : super_type(x) {
+  }
+
+  // Move constructor.
+  btree_multimap(self_type &&x)
+      : super_type() {
+    this->swap(x);
+  }
+
+  // Copy/move assignment
+  self_type& operator=(self_type x) {
+    this->swap(x);
+    return *this;
   }
 
   // Range constructor.

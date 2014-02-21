@@ -68,6 +68,18 @@ class safe_btree_set : public btree_unique_container<
       : super_type(x) {
   }
 
+  // Move constructor.
+  safe_btree_set(self_type &&x)
+      : super_type() {
+    this->swap(x);
+  }
+
+  // Copy/move assignment
+  self_type& operator=(self_type x) {
+    this->swap(x);
+    return *this;
+  }
+
   // Range constructor.
   template <class InputIterator>
   safe_btree_set(InputIterator b, InputIterator e,

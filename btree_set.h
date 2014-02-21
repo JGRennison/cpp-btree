@@ -58,6 +58,18 @@ class btree_set : public btree_unique_container<
       : super_type(x) {
   }
 
+  // Move constructor.
+  btree_set(self_type &&x)
+      : super_type() {
+    this->swap(x);
+  }
+
+  // Copy/move assignment
+  self_type& operator=(self_type x) {
+    this->swap(x);
+    return *this;
+  }
+
   // Range constructor.
   template <class InputIterator>
   btree_set(InputIterator b, InputIterator e,
@@ -99,6 +111,18 @@ class btree_multiset : public btree_multi_container<
   // Copy constructor.
   btree_multiset(const self_type &x)
       : super_type(x) {
+  }
+
+  // Move constructor.
+  btree_multiset(self_type &&x)
+      : super_type() {
+    this->swap(x);
+  }
+
+  // Copy/move assignment
+  self_type& operator=(self_type x) {
+    this->swap(x);
+    return *this;
   }
 
   // Range constructor.
