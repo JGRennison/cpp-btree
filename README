@@ -38,3 +38,4 @@ Changes include:
 - Changing size_type from ssize_t to size_t
 - Adding cbegin, cend, crbegin, crend.
 - Adding key_comp
+- No longer #define NDEBUG if unset, this can clash with other headers, test for BTREE_DEBUG being defined instead
