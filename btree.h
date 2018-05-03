@@ -1761,7 +1761,8 @@ inline typename btree<P>::iterator
 btree<P>::insert_unique(iterator position, const value_type &v) {
   if (!empty()) {
     const key_type &key = params_type::key(v);
-    if (position == end() || compare_keys(key, position.key())) {
+    const iterator end = this->end();
+    if (position == end || compare_keys(key, position.key())) {
       iterator prev = position;
       if (position == begin() || compare_keys((--prev).key(), key)) {
         // prev.key() < key < position.key()
@@ -1770,7 +1771,7 @@ btree<P>::insert_unique(iterator position, const value_type &v) {
     } else if (compare_keys(position.key(), key)) {
       iterator next = position;
       ++next;
-      if (next == end() || compare_keys(key, next.key())) {
+      if (next == end || compare_keys(key, next.key())) {
         // position.key() < key < next.key()
         return internal_insert(next, v);
       }
@@ -1808,7 +1809,8 @@ typename btree<P>::iterator
 btree<P>::insert_multi(iterator position, const value_type &v) {
   if (!empty()) {
     const key_type &key = params_type::key(v);
-    if (position == end() || !compare_keys(position.key(), key)) {
+    const iterator end = this->end();
+    if (position == end || !compare_keys(position.key(), key)) {
       iterator prev = position;
       if (position == begin() || !compare_keys(key, (--prev).key())) {
         // prev.key() <= key <= position.key()
@@ -1817,7 +1819,7 @@ btree<P>::insert_multi(iterator position, const value_type &v) {
     } else {
       iterator next = position;
       ++next;
-      if (next == end() || !compare_keys(next.key(), key)) {
+      if (next == end || !compare_keys(next.key(), key)) {
         // position.key() < key <= next.key()
         return internal_insert(next, v);
       }
@@ -1842,7 +1844,7 @@ void btree<P>::assign(const self_type &x) {
 
   // Assignment can avoid key comparisons because we know the order of the
   // values is the same order we'll store them in.
-  for (const_iterator iter = x.begin(); iter != x.end(); ++iter) {
+  for (const_iterator iter = x.begin(), xend = x.end(); iter != xend; ++iter) {
     if (empty()) {
       insert_multi(*iter);
     } else {
