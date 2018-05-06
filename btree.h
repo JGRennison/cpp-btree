@@ -149,12 +149,7 @@ struct big_ {
 };
 
 // A compile-time assertion.
-template <bool>
-struct CompileAssert {
-};
-
-#define COMPILE_ASSERT(expr, msg) \
-  typedef CompileAssert<(bool(expr))> msg[bool(expr) ? 1 : -1]
+#define COMPILE_ASSERT(expr, msg) static_assert(expr, #msg)
 
 // A helper type used to indicate that a key-compare-to functor has been
 // provided. A user can specify a key-compare-to functor by doing:
@@ -519,11 +514,11 @@ class btree_node {
 
   // Getter for the position of this node in its parent.
   int position() const { return fields_.position; }
-  void set_position(int v) { fields_.position = v; }
+  void set_position(int v) { fields_.position = static_cast<typename Params::node_count_type>(v); }
 
   // Getter/setter for the number of values stored in this node.
   int count() const { return fields_.count; }
-  void set_count(int v) { fields_.count = v; }
+  void set_count(int v) { fields_.count = static_cast<typename Params::node_count_type>(v); }
   int max_count() const { return fields_.max_count; }
 
   // Getter for the parent of this node.
@@ -570,7 +565,7 @@ class btree_node {
   void set_child(int i, btree_node *c) {
     *mutable_child(i) = c;
     c->fields_.parent = this;
-    c->fields_.position = i;
+    c->fields_.position = static_cast<typename Params::node_count_type>(i);
   }
 
   // Returns the position of the first value whose key is not less than k.
@@ -683,7 +678,7 @@ class btree_node {
     btree_node *n = reinterpret_cast<btree_node*>(f);
     f->leaf = 1;
     f->position = 0;
-    f->max_count = max_count;
+    f->max_count = static_cast<typename base_fields::field_type>(max_count);
     f->count = 0;
     f->parent = parent;
 #ifdef BTREE_DEBUG
