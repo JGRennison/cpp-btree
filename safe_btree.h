@@ -116,12 +116,18 @@ class safe_btree_iterator {
   }
 
   // Equality/inequality operators.
+#if defined(__cplusplus) && __cplusplus >= 202002L
+  friend bool operator==(const safe_btree_iterator &a, const safe_btree_iterator &b) noexcept {
+    return a.iter() == b.iter();
+  }
+#else
   bool operator==(const const_iterator &x) const {
     return iter() == x.iter();
   }
   bool operator!=(const const_iterator &x) const {
     return iter() != x.iter();
   }
+#endif
 
   // Accessors for the key/value the iterator is pointing at.
   const key_type& key() const {

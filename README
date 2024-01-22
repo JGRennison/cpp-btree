@@ -43,6 +43,7 @@ Changes include:
 - Add noexcept to swap-based move constructors and copy/move assignment operator
 - Remove use of deprecated std::allocator::rebind type
 - Adding support for uncopyable/move-only map/multimap values (not keys).
+- Fix ambiguous comparison operator warnings/errors when compiling with C++20.
 
 CMakeLists-pthreads-fix.txt is a modified copy of CMakeLists.txt which includes -lpthreads when building the tests/benchmarks.
 Using this instead fixes compilation on some platforms.

@@ -133,9 +133,11 @@ class btree_container {
     return true;
   }
 
+#if !(defined(__cplusplus) && __cplusplus >= 202002L)
   bool operator!=(const self_type& other) const {
     return !operator==(other);
   }
+#endif
 
   // Functor retrieval
   key_compare key_comp() const { return tree_.key_comp(); }
