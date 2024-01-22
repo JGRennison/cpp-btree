@@ -185,6 +185,7 @@ struct btree_key_compare_to_adapter : Compare {
   btree_key_compare_to_adapter(const btree_key_compare_to_adapter<Compare> &c)
       : Compare(c) {
   }
+  btree_key_compare_to_adapter &operator=(const btree_key_compare_to_adapter &) = default;
 };
 
 template <>
@@ -197,6 +198,7 @@ struct btree_key_compare_to_adapter<std::less<std::string> >
   int operator()(const std::string &a, const std::string &b) const {
     return a.compare(b);
   }
+  btree_key_compare_to_adapter &operator=(const btree_key_compare_to_adapter &) = default;
 };
 
 template <>
@@ -209,6 +211,7 @@ struct btree_key_compare_to_adapter<std::greater<std::string> >
   int operator()(const std::string &a, const std::string &b) const {
     return b.compare(a);
   }
+  btree_key_compare_to_adapter &operator=(const btree_key_compare_to_adapter &) = default;
 };
 
 // A helper class that allows a compare-to functor to behave like a plain
@@ -766,6 +769,8 @@ struct btree_iterator {
       : node(x.node),
         position(x.position) {
   }
+
+  btree_iterator &operator=(const btree_iterator &) = default;
 
   // Increment/decrement the iterator.
   void increment() {
