@@ -44,6 +44,7 @@ Changes include:
 - Remove use of deprecated std::allocator::rebind type
 - Adding support for uncopyable/move-only map/multimap values (not keys).
 - Fix ambiguous comparison operator warnings/errors when compiling with C++20.
+- Use union to avoid strict aliasing violation in struct leaf_fields.
 
 CMakeLists-pthreads-fix.txt is a modified copy of CMakeLists.txt which includes -lpthreads when building the tests/benchmarks.
 Using this instead fixes compilation on some platforms.
