@@ -44,6 +44,7 @@ Changes include:
 - Add noexcept to swap-based move constructors and copy/move assignment operator
 - Remove use of deprecated std::allocator::rebind type
 - Adding support for uncopyable/move-only map/multimap values (not keys).
+- Remove requirement that key/value types are default-constructible.
 - Fix ambiguous comparison operator warnings/errors when compiling with C++20.
 - Use union to avoid strict aliasing violation in struct leaf_fields.
 - Do not include IO stream headers or support dumping/operator<< if BTREE_NO_IOSTREAM is defined.
