@@ -152,7 +152,7 @@ void BenchmarkRun::Run() {
   }
   std::cout << benchmark_name << "\t"
 	    << accum_micros * 1000 / iters << "\t"
-	    << iters;
+	    << iters << std::endl;
   current_benchmark = NULL;
 }
 
