@@ -46,7 +46,7 @@ Changes include:
 - Add support for uncopyable/move-only map/multimap values (not keys).
 - Remove requirement that key/value types are default-constructible.
 - Fix ambiguous comparison operator warnings/errors when compiling with C++20.
-- Use union to avoid strict aliasing violation in struct leaf_fields.
+- Fix strict aliasing violation issues in struct leaf_fields.
 - Do not include IO stream headers or support dumping/operator<< if BTREE_NO_IOSTREAM is defined.
 - Fix formatting of benchmark results.
 
