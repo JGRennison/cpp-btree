@@ -65,7 +65,7 @@ namespace btree {
 
 // Select the first member of a pair.
 template <class _Pair>
-struct select1st : public std::unary_function<_Pair, typename _Pair::first_type> {
+struct select1st {
   const typename _Pair::first_type& operator()(const _Pair& __x) const {
     return __x.first;
   }
