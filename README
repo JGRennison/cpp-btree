@@ -50,6 +50,8 @@ Changes include:
 - Do not include IO stream headers or support dumping/operator<< if BTREE_NO_IOSTREAM is defined.
 - Fix formatting of benchmark results.
 - Fix array bounds compiler warnings and possible undefined behaviour due to node struct size issues.
+- Optimisations to reduce unnecessary pointer dereferences.
+- Remove use of deprectared std::unary_function type from test code.
 
 CMakeLists-pthreads-fix.txt is a modified copy of CMakeLists.txt which includes -lpthreads when building the tests/benchmarks.
 Using this instead fixes compilation on some platforms.
