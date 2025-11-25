@@ -437,6 +437,31 @@ class unique_checker : public base_checker<TreeType, CheckerType> {
       insert(*b);
     }
   }
+
+  // Emplace routines
+  template <typename... Args>
+  std::pair<iterator,bool> emplace(Args&&... args) {
+    int size = this->tree_.size();
+    std::pair<typename CheckerType::iterator,bool> checker_res =
+        this->checker_.emplace(args...);
+    std::pair<iterator,bool> tree_res = this->tree_.emplace(std::forward<Args>(args)...);
+    EXPECT_EQ(*tree_res.first, *checker_res.first);
+    EXPECT_EQ(tree_res.second, checker_res.second);
+    EXPECT_EQ(this->tree_.size(), this->checker_.size());
+    EXPECT_EQ(this->tree_.size(), size + tree_res.second);
+    return tree_res;
+  }
+  template <typename... Args>
+  iterator emplace_hint(iterator position, Args&&... args) {
+    int size = this->tree_.size();
+    std::pair<typename CheckerType::iterator,bool> checker_res =
+        this->checker_.emplace(args...);
+    iterator tree_res = this->tree_.emplace_hint(position, std::forward<Args>(args)...);
+    EXPECT_EQ(*tree_res, *checker_res.first);
+    EXPECT_EQ(this->tree_.size(), this->checker_.size());
+    EXPECT_EQ(this->tree_.size(), size + checker_res.second);
+    return tree_res;
+  }
 };
 
 // A checker for multiple sorted associative containers. TreeType is expected
@@ -490,6 +515,28 @@ class multi_checker : public base_checker<TreeType, CheckerType> {
     for (; b != e; ++b) {
       insert(*b);
     }
+  }
+
+  // Emplace routines
+  template <typename... Args>
+  iterator emplace(Args&&... args) {
+    int size = this->tree_.size();
+    typename CheckerType::iterator checker_res = this->checker_.emplace(args...);
+    iterator tree_res = this->tree_.emplace(std::forward<Args>(args)...);
+    EXPECT_EQ(*tree_res, *checker_res);
+    EXPECT_EQ(this->tree_.size(), this->checker_.size());
+    EXPECT_EQ(this->tree_.size(), size + 1);
+    return tree_res;
+  }
+  template <typename... Args>
+  iterator emplace_hint(iterator position, Args&&... args) {
+    int size = this->tree_.size();
+    typename CheckerType::iterator checker_res = this->checker_.emplace(args...);
+    iterator tree_res = this->tree_.emplace_hint(position, std::forward<Args>(args)...);
+    EXPECT_EQ(*tree_res, *checker_res.first);
+    EXPECT_EQ(this->tree_.size(), this->checker_.size());
+    EXPECT_EQ(this->tree_.size(), size + 1);
+    return tree_res;
   }
 };
 
@@ -729,6 +776,16 @@ void DoTest(const char *name, T *b, const std::vector<V> &values) {
   const_b.verify();
 
   mutable_b.clear();
+
+  // Test emplace
+  for (int i = 0; i < values.size(); ++i) {
+    mutable_b.emplace(values[i]);
+    mutable_b.value_check(values[i]);
+  }
+  assert(mutable_b.size() == values.size());
+
+  const_b.verify();
+  mutable_b.clear();
 }
 
 template <typename T>
@@ -926,6 +983,15 @@ void BtreeMapTest() {
   EXPECT_EQ(b.begin()->second, Generator<value_type>(1000)(0).second);
   EXPECT_EQ(b.rbegin()->first, Generator<value_type>(1000)(999).first);
   EXPECT_EQ(b.rbegin()->second, Generator<value_type>(1000)(999).second);
+
+  b.clear();
+
+  // Verify we can insert using emplace.
+  for (int i = 0; i < 1000; i++) {
+    value_type v = Generator<value_type>(1000)(i);
+    b.emplace(v.first, v.second);
+  }
+  EXPECT_EQ(b.size(), 1000);
 }
 
 template <typename T>
