@@ -992,6 +992,18 @@ void BtreeMapTest() {
     b.emplace(v.first, v.second);
   }
   EXPECT_EQ(b.size(), 1000);
+  b.clear();
+
+  // Verify we can insert using try_emplace.
+  for (int i = 0; i < 1000; i++) {
+    value_type v = Generator<value_type>(1000)(i);
+    b.try_emplace(v.first, v.second);
+  }
+  for (int i = 0; i < 1000; i++) {
+    value_type v = Generator<value_type>(1000)(i);
+    b.try_emplace(v.first, v.second);
+  }
+  EXPECT_EQ(b.size(), 1000);
 }
 
 template <typename T>
