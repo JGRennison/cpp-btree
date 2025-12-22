@@ -52,7 +52,7 @@ Changes include:
 - Fix formatting of benchmark results.
 - Fix array bounds compiler warnings and possible undefined behaviour due to node struct size issues.
 - Optimisations to reduce unnecessary pointer dereferences.
-- Remove use of deprectared std::unary_function type from test code.
+- Remove use of deprecated std::unary_function type from test code.
 
 CMakeLists-pthreads-fix.txt is a modified copy of CMakeLists.txt which includes -lpthreads when building the tests/benchmarks.
 Using this instead fixes compilation on some platforms.
