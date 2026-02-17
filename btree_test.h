@@ -254,7 +254,7 @@ class base_checker {
   }
 
   // Deletion routines.
-  int erase(const key_type &key) {
+  size_t erase(const key_type &key) {
     int size = tree_.size();
     int res = checker_.erase(key);
     EXPECT_EQ(res, tree_.count(key));

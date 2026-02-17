@@ -235,7 +235,7 @@ class btree_unique_container : public btree_container<Tree> {
   }
 
   // Deletion routines.
-  int erase(const key_type &key) {
+  size_t erase(const key_type &key) {
     return this->tree_.erase_unique(key);
   }
   // Erase the specified iterator from the btree. The iterator must be valid
@@ -378,7 +378,7 @@ class btree_multi_container : public btree_container<Tree> {
   }
 
   // Deletion routines.
-  int erase(const key_type &key) {
+  size_t erase(const key_type &key) {
     return this->tree_.erase_multi(key);
   }
   // Erase the specified iterator from the btree. The iterator must be valid
