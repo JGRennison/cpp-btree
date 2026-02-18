@@ -329,6 +329,27 @@ class base_checker {
     return iter_check(result, checker_end);
   }
 
+  template <typename Pred>
+  iterator erase_count_if(iterator begin, size_t count, Pred pred) {
+    size_t size = tree_.size();
+    typename CheckerType::iterator checker_begin = checker_.find(begin.key());
+    for (iterator tmp(tree_.find(begin.key())); tmp != begin; ++tmp) {
+      ++checker_begin;
+    }
+    Pred checker_pred = pred;
+    typename CheckerType::iterator checker_end = checker_begin;
+    for (size_t i = 0; i < count; i++) {
+      if (checker_pred(*checker_end)) {
+          checker_end = checker_.erase(checker_end);
+      } else {
+          ++checker_end;
+      }
+    }
+    iterator result = tree_.erase_count_if(begin, count, pred);
+    EXPECT_EQ(tree_.size(), checker_.size());
+    return iter_check(result, checker_end);
+  }
+
   // Utility routines.
   void clear() {
     tree_.clear();
@@ -809,6 +830,25 @@ void DoTest(const char *name, T *b, const std::vector<V> &values) {
   for (int i = 0; i < values.size() / 2; ++i) ++mutable_iter_begin;
   erase_iter = mutable_b.erase_count(mutable_iter_begin, values.size() - values.size() / 2);
   EXPECT_EQ(mutable_b.size(), values.size() / 2);
+  EXPECT_TRUE(erase_iter == mutable_b.end());
+  const_b.verify();
+
+  size_t ctr = 0;
+  auto filter = [=](const typename T::value_type &) mutable -> bool {
+    return ++ctr & 1;
+  };
+
+  // First half (using count with filter).
+  mutable_b = b_copy;
+  erase_iter = mutable_b.erase_count_if(mutable_b.begin(), values.size() / 2, filter);
+  EXPECT_EQ(distance(erase_iter, mutable_b.end()), values.size() - values.size() / 2);
+  const_b.verify();
+
+  // Second half (using count with filter).
+  mutable_b = b_copy;
+  mutable_iter_begin = mutable_b.begin();
+  for (int i = 0; i < values.size() / 2; ++i) ++mutable_iter_begin;
+  erase_iter = mutable_b.erase_count_if(mutable_iter_begin, values.size() - values.size() / 2, filter);
   EXPECT_TRUE(erase_iter == mutable_b.end());
   const_b.verify();
 

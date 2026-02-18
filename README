@@ -53,6 +53,8 @@ Changes include:
 - Fix array bounds compiler warnings and possible undefined behaviour due to node struct size issues.
 - Optimisations to reduce unnecessary pointer dereferences.
 - Remove use of deprecated std::unary_function type from test code.
+- Improve performance of range erase operations.
+- Add erase_count and erase_count_if methods for range erase and range erase with predicate.
 
 CMakeLists-pthreads-fix.txt is a modified copy of CMakeLists.txt which includes -lpthreads when building the tests/benchmarks.
 Using this instead fixes compilation on some platforms.
