@@ -190,6 +190,33 @@ TEST(Btree, IteratorIncrementBy) {
   }
 }
 
+TEST(Btree, IteratorDecrementBy) {
+  // Test that decrement_by returns the same position as decrement.
+  const int kSetSize = 2341;
+  btree_set<int32_t> my_set;
+  for (int i = 0; i < kSetSize; ++i) {
+    my_set.insert(i);
+  }
+
+  {
+    // Simple decrement vs. decrement by.
+    btree_set<int32_t>::iterator a = my_set.end();
+    btree_set<int32_t>::iterator b = my_set.end();
+    a.decrement();
+    b.decrement_by(1);
+    EXPECT_EQ(*a, *b);
+  }
+
+  btree_set<int32_t>::iterator a = my_set.end();
+  for (int i = 1; i < kSetSize; ++i) {
+    --a;
+    // increment_by
+    btree_set<int32_t>::iterator b = my_set.end();
+    b.decrement_by(i);
+    EXPECT_EQ(*a, *b) << ": i=" << i;
+  }
+}
+
 TEST(Btree, Comparison) {
   const int kSetSize = 1201;
   btree_set<int64_t> my_set;
@@ -246,11 +273,11 @@ TEST(Btree, Comparison) {
 
 TEST(Btree, RangeCtorSanity) {
   typedef btree_set<int, std::less<int>, std::allocator<int>, 256> test_set;
-  typedef btree_map<int, int, std::less<int>, std::allocator<int>, 256> 
+  typedef btree_map<int, int, std::less<int>, std::allocator<int>, 256>
       test_map;
-  typedef btree_multiset<int, std::less<int>, std::allocator<int>, 256> 
+  typedef btree_multiset<int, std::less<int>, std::allocator<int>, 256>
       test_mset;
-  typedef btree_multimap<int, int, std::less<int>, std::allocator<int>, 256> 
+  typedef btree_multimap<int, int, std::less<int>, std::allocator<int>, 256>
       test_mmap;
   std::vector<int> ivec;
   ivec.push_back(1);
