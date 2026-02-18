@@ -247,6 +247,9 @@ class btree_unique_container : public btree_container<Tree> {
   void erase(const iterator &first, const iterator &last) {
     this->tree_.erase(first, last);
   }
+  iterator erase_count(const iterator &first, size_t count) {
+    return this->tree_.erase_count(first, count);
+  }
 };
 
 // A common base class for btree_map and safe_btree_map.
@@ -389,6 +392,9 @@ class btree_multi_container : public btree_container<Tree> {
   }
   void erase(const iterator &first, const iterator &last) {
     this->tree_.erase(first, last);
+  }
+  iterator erase_count(const iterator &first, size_t count) {
+    return this->tree_.erase_count(first, count);
   }
 };
 

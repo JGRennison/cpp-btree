@@ -305,6 +305,30 @@ class base_checker {
     EXPECT_EQ(tree_.size(), size - count);
   }
 
+  iterator erase_count(iterator begin, size_t count) {
+    size_t size = tree_.size();
+    iterator end = begin;
+    for (size_t i = 0; i < count; i++) {
+        ++end;
+    }
+    typename CheckerType::iterator checker_begin = checker_.find(begin.key());
+    for (iterator tmp(tree_.find(begin.key())); tmp != begin; ++tmp) {
+      ++checker_begin;
+    }
+    typename CheckerType::iterator checker_end =
+        end == tree_.end() ? checker_.end() : checker_.find(end.key());
+    if (end != tree_.end()) {
+      for (iterator tmp(tree_.find(end.key())); tmp != end; ++tmp) {
+        ++checker_end;
+      }
+    }
+    checker_.erase(checker_begin, checker_end);
+    iterator result = tree_.erase_count(begin, count);
+    EXPECT_EQ(tree_.size(), checker_.size());
+    EXPECT_EQ(tree_.size(), size - count);
+    return iter_check(result, checker_end);
+  }
+
   // Utility routines.
   void clear() {
     tree_.clear();
@@ -749,6 +773,13 @@ void DoTest(const char *name, T *b, const std::vector<V> &values) {
   EXPECT_EQ(mutable_b.size(), 0);
   const_b.verify();
 
+  // Test range erase (using count).
+  mutable_b = b_copy;
+  typename T::iterator erase_iter = mutable_b.erase_count(mutable_b.begin(), mutable_b.size());
+  EXPECT_EQ(mutable_b.size(), 0);
+  EXPECT_TRUE(erase_iter == mutable_b.end());
+  const_b.verify();
+
   // First half.
   mutable_b = b_copy;
   typename T::iterator mutable_iter_end = mutable_b.begin();
@@ -763,6 +794,22 @@ void DoTest(const char *name, T *b, const std::vector<V> &values) {
   for (int i = 0; i < values.size() / 2; ++i) ++mutable_iter_begin;
   mutable_b.erase(mutable_iter_begin, mutable_b.end());
   EXPECT_EQ(mutable_b.size(), values.size() / 2);
+  const_b.verify();
+
+  // First half (using count).
+  mutable_b = b_copy;
+  erase_iter = mutable_b.erase_count(mutable_b.begin(), values.size() / 2);
+  EXPECT_EQ(mutable_b.size(), values.size() - values.size() / 2);
+  EXPECT_TRUE(erase_iter == mutable_b.begin());
+  const_b.verify();
+
+  // Second half (using count).
+  mutable_b = b_copy;
+  mutable_iter_begin = mutable_b.begin();
+  for (int i = 0; i < values.size() / 2; ++i) ++mutable_iter_begin;
+  erase_iter = mutable_b.erase_count(mutable_iter_begin, values.size() - values.size() / 2);
+  EXPECT_EQ(mutable_b.size(), values.size() / 2);
+  EXPECT_TRUE(erase_iter == mutable_b.end());
   const_b.verify();
 
   // Second quarter.
